@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>Centro de Atenção Psicossocial de Barra do Garças/MT </title>
+
+    {% load static %}
+    <script src="{% static 'material/js/jquery.js' %}"></script>
+
+    {% include 'material/includes/material_css.html' %}
+    {% include 'material/includes/material_js.html' %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+
+    <!-- Compiled and minified JavaScript -->
+    <!-- Isto dá um bug muito louco -->
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>#}
+
+    <link rel="stylesheet" href="{% static 'pickdate/lib/themes/default.css' %}" id="theme_base">
+    <link rel="stylesheet" href="{% static 'pickdate/lib/themes/default.date.css' %}" id="theme_date">
+    <link rel="stylesheet" href="{% static 'pickdate/lib/themes/default.time.css' %}" id="theme_time">
+
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link href="/static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+    <style>
+        character-counter {
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+  <nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+        <a href="/">
+      <img src="/static/images/LOGO-CAPS-II.png" width="70"></a>
+
+        {% if user.is_authenticated %}
+                 <ul class="right hide-on-med-and-down" >
+                  <li><a href="/sair">Sair</a></li>
+                 </ul>
+            {% if user.is_staff %}
+                 <ul class="right hide-on-med-and-down">
+                  <li><a href="/pacientelist?page=0">Pacientes</a></li>
+                 </ul>
+
+                <ul class="right hide-on-med-and-down">
+                  <li><a href="/consultas">Consultas</a></li>
+                </ul>
+
+                <ul class="right hide-on-med-and-down">
+                  <li><a href="/cadprofissionais?page=0">Profissionais</a></li>
+                 </ul>
+            {% else  %}
+                <!-- Menu mobile dos profissionais -->
+                <ul class="right hide-on-med-and-down">
+                  <li><a href="/minhasconsultas">Consultas</a></li>
+                 </ul>
+
+                <!-- Lista de pacientes de acordo com o tipo de paciente -->
+                <ul class="right hide-on-med-and-down">
+                  <li><a href="/pacientelist?page=0">Pacientes</a></li>
+                </ul>
+
+            {% endif %}
+
+
+        {% else %}
+
+            <ul class="right hide-on-med-and-down">
+              <li><a href="/login">Login</a></li>
+            </ul>
+        {% endif %}
+
+        <ul id="nav-mobile" class="side-nav">
+
+           {% if user.is_authenticated %}
+
+               {% if user.is_staff %}
+
+                  <li><a href="/pacientelist?page=0">Pacientes</a></li>
+                  <li><a href="/consultas">Consultas</a></li>
+                  <li><a href="/cadprofissionais?page=0">Profissionais</a></li>
+               {% else %}
+                   <!-- Menu mobile dos profissionais -->
+                   <!-- Menu mobile dos profissionais -->
+{#                <ul class="right hide-on-med-and-down">#}
+                  <li><a href="/minhasconsultas">Consultas</a></li>
+{#                 </ul>#}
+
+                <!-- Lista de pacientes de acordo com o tipo de paciente -->
+{#                <ul class="right hide-on-med-and-down">#}
+                  <li><a href="/pacientelist?page=0">Pacientes</a></li>
+{#                </ul>#}
+               {% endif %}
+              <li><a href="/sair">Sair</a></li>
+
+           {% else %}
+              <li><a href="/login">Login</a></li>
+           {% endif %}
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+
+
+  </nav>
+
+
+  <div class="container">
+    <div class="section">
+
+      <div class="row" style="min-height: 500px;">
+          {% block conteudo %}
+            <br />
+            <br />
+            <br />
+            <br />
+              <center>
+
+                {% if user.is_authenticated %}
+                      <h3>Seja bem vindo, {{ user.username }}!</h3>
+               {% else %}
+                      <img src="/static/images/LOGO-CAPS-II.png" width="100"></a>
+                    <br />
+                    <br />
+                        <a href="/login/">Logue-se</a>
+
+                {% endif %}
+
+              </center>
+          {% endblock %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="page-footer teal">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">Endereço</h5>
+          <p class="grey-text text-lighten-4">
+             Endereço: Rua Francisco Lira, nº 1470, Bairro Sena Marques <br />
+
+</p>
+
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Contato</h5>
+          <ul>
+            <li class="grey-text text-lighten-4">Tel.: (66) 3401-7905</li>
+          </ul>
+        </div>
+        <div class="col l3 s12">
+
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+       Desenvolvedor: Jacinto José Franco e-mail: jacinto.franco@bag.ifmt.edu.br
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+{#  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>#}
+{#  <script src="/static/js/materialize.js"></script>#}
+{#  <script src="/static/js/init.js"></script>#}
+
+
+
+    <script src="{% static 'pickdate/lib/picker.js' %}"></script>
+    <script src="{% static 'pickdate/lib/picker.time.js' %}"></script>
+    <script src="{% static 'pickdate/lib/picker.date.js' %}"></script>
+    <script src="{% static 'js/jquery.inputmask.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.button-collapse').sideNav();
+            $('.parallax').parallax();
+        })
+    </script>
+
+
+
+  </body>
+</html>

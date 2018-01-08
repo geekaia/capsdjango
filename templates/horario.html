@@ -1,0 +1,56 @@
+{% extends "base2.html" %}
+{% block conteudo %}
+    <h4>Horário de {{ prof.nome }}</h4>
+
+    <a href="/profissionais?profid=0" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+    <br />
+    <br />
+    <div id="horarionew">
+
+    </div>
+
+    <table border="1" class="bordered" >
+        <thead>
+          <tr>
+              <th>Período</th>
+              <th>Segunda</th>
+              <th>Terça</th>
+              <th>Quarta</th>
+              <th>Quinta</th>
+              <th>Sexta</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Matutino</td>
+            <td>
+                <a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="material-icons">add</i></a>
+</td>
+            <td><a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="material-icons">add</i></a></td>
+            <td><a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="material-icons">add</i></a></td>
+            <td><a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="material-icons">add</i></a></td>
+            <td><a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="material-icons">add</i></a></td>
+          </tr>
+          <tr>
+            <td>Vespertino</td>
+            <td><a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="material-icons">add</i></a></td>
+            <td><a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="material-icons">add</i></a></td>
+            <td><a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="material-icons">add</i></a></td>
+            <td><a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="material-icons">add</i></a></td>
+            <td><a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="material-icons">add</i></a></td>
+          </tr>
+        </tbody>
+      </table>
+
+{% endblock %}

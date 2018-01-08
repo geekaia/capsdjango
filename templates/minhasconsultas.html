@@ -1,0 +1,397 @@
+{% extends "base2.html" %}
+
+{% block conteudo %}
+    <div style="padding: 10px;">
+
+    <div class="row">
+    <button data-target="Pesquisar" class="btn waves-effect waves-light modal-trigger">Outro dia</button>
+
+    <br />
+    <br />
+
+
+    <div id="Pesquisar" class="modal">
+        <div class="modal-content">
+          <h4>Defina uma data</h4>
+          <p> <input type="date" id="datacon" /></p>
+        </div>
+        <div class="modal-footer">
+            <input type="button" value="Ver consultas desta data" onclick="verconsulta();" class="modal-action modal-close waves-effect waves-green btn blue" />
+        </div>
+        <script>
+            function  verconsulta() {
+                window.location.href = "/minhasconsultas?data="+$("#datacon").val();
+            }
+        </script>
+    </div>
+{##}
+{#          {% load static %}#}
+{#      <script src="{% static 'textbox/textboxio-client/textboxio/textboxio.js' %}"></script>#}
+{##}
+
+    <script>
+
+      $(document).ready(function(){
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal').modal();
+
+
+         $('ul.tabs').tabs({ 'swipeable': true, responsiveThreshold: false });
+          {% ifequal cad '1' %}
+              // Mostrar janela
+              $('#novaConsulta').modal('open');
+          {% endifequal %}
+      });
+
+    </script>
+
+    <h6>Data: {{ data|date:"d/m/Y -- l" }}   </h6>
+    <br />
+    <script>
+     $(document).ready(function(){
+    $('.collapsible').collapsible({accordion: true});
+
+         {% if lastid %}
+             $('#{{ lastid }} > div').click();
+         {% endif %}
+  });
+    </script>
+
+
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <ul class="row">
+                {% for prof in profs %}
+
+{#                 <li  id="{{ prof.id }}" >#}
+{#                  <div  class="collapsible-header">{{ prof.get_especialidade_display }}: {{ prof.user.get_full_name }} </div>#}
+{#                  <div class="collapsible-body">#}
+
+
+{#                <div class="col s12 m7">#}
+{#                    <div class="card">#}
+{#                        <div class="card-content white-text">#}
+                           {{ prof.get_especialidade_display }}: {{ prof.user.get_full_name }}
+
+{#                            <h6>Nome: {{ prof.user.get_full_name }} <a href="/diasDisponiveis?idprof={{ prof.id }}">Verificar disponibilidade</a> </h6>#}
+
+            <h6><a href="/diasDisponiveis">Consultas agendadas</a> </h6>
+
+            <table class="bordered" >
+                <thead>
+                <tr>
+                    <th>Período</th>
+                    <th>Consultas</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="m{{ prof.id }}">
+                    <td width="150px;"><b>Matutino</b></td>
+                    <td>
+                        <table>
+                                <tr>
+                                    <td>Nome</td>
+                                    <td>Horário</td>
+                                    <td>Ações</td>
+                                </tr>
+                                {% for p in consultasList %}
+                                    {% ifequal p.cs.periodo "mat" %}
+                                        {% ifequal prof.id p.cs.profissional.id %}
+                                            <tr>
+                                                <td>{{ p.cs.paciente.nome }}
+{#                                                    <a target="_blank" href="/pacienteman?pacienteid={{ p.cs.paciente.id }}">{{ p.cs.paciente.nome }}</a>#}
+                                                    </td>
+                                                <td>{{ p.cs.hora }}</td>
+                                                <td>
+                                                    {{ p.cs.get_status_display }}
+                                                    <button data-target="evolucao{{ p.cs.id }}" class="btn waves-effect waves-light modal-trigger">Evolução</button>
+                                                    <div id="evolucao{{ p.cs.id }}" class="modal" style="padding: 10px; min-width: 50%; min-height: 70%;">
+                                                          <form method="POST">
+                                                              {% csrf_token %}
+                                                            <b>Evolução:</b> {{ p.anot.paciente }}
+                                                              {% ifequal p.anot.id -1 %}
+                                                              <input type="hidden" name="id"  id="id" value="-1" />
+                                                              <input type="hidden" name="paciente"  id="paciente" value="{{ p.anot.paciente }}" />
+                                                              <input type="hidden" name="anotacaoconsulta" id="anotacaoconsulta" value="{{ p.anot.anotacaoconsulta }}"  /> <!-- Qual consulta? -->
+                                                            {% else %}
+                                                              <input type="hidden" name="id"  id="id" value="{{ p.anot.id }}" />
+                                                              <input type="hidden" name="paciente"  id="paciente" value="{{ p.anot.paciente.id }}" />
+                                                              <input type="hidden" name="anotacaoconsulta" id="anotacaoconsulta" value="{{ p.anot.anotacaoconsulta.id }}"  /> <!-- Qual consulta? -->
+
+
+                                                              {% endifequal %}
+                                                              <textarea id="evolucaoedit" name="anotacoes"  style="min-height: 300px;">{{ p.anot.anotacoes }}</textarea>
+                                                              <br /><b>Última atualização: </b>{{ p.anot.ultimaatualizacao }} <br />
+                                                              <input type="submit" class="btn btn-primary" value="Salvar" />
+                                                          </form>
+                                                          <script>
+{#                                                              $(document).ready(function(){#}
+{#                                                                  textboxio.replace('textarea');#}
+{#                                                              });#}
+                                                            </script>
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                            {% endifequal %}
+                                    {% endifequal %}
+                                 {% endfor %}
+                        </table>
+{#                                         <a href="/pacientelist?page=0&profid={{ prof.id }}&periodo=mat&data={{ data|date:"d/m/Y" }}" class="btn-floating btn-tiny waves-effect waves-light yellow">#}
+{#                                        <i class="small material-icons">add</i>#}
+{#                                      </a>#}
+                    </td>
+                </tr>
+
+                <tr id="v{{ prof.id }}">
+                    <td><b>Vespertino</b></td>
+                    <td>
+                       <table>
+                            <tr>
+                                <td>Nome</td>
+                                <td>Horário</td>
+                                <td>Ações</td>
+                            </tr>
+                           {% for p in consultasList %}
+                                    {% ifequal p.periodo "ves" %}
+                                        {% ifequal prof.id p.profissional.id %}
+                                            <tr>
+                                                <td>
+                                                    <a target="_blank" href="/pacienteman?pacienteid={{ p.paciente.id }}">{{ p.paciente.nome }}</a>
+                                                        </td>
+                                                <td>{{ p.hora }}</td>
+                                                <td>
+                                                        {{ p.get_status_display }}
+                                                        <a href="#" onclick="cgStatus({{ p.id }});">
+                                                            Alterar
+                                                        </a>
+
+                                                        <a href="#" onclick="remover({{ p.id }},'{{ p.paciente.nome }}');">
+                                                            Remover
+                                                        </a>
+                                                         <input type="hidden" id="nome{{ p.id }}" value="{{ p.paciente.nome }}"/>
+                                                        <input type="hidden" id="hora{{ p.id }}" value="{{ p.hora }}"/>
+                                                        <input type="hidden" id="anot{{ p.id }}" value="{{ p.anotacoes }}"/>
+                                                        <input type="hidden" id="st{{ p.id }}" value="{{ p.status }}"/>
+                                                    </td>
+                                            </tr>
+                                        {% endifequal %}
+                                    {% endifequal %}
+                           {% endfor %}
+                        </table>
+{#                                       <a href="/pacientelist?page=0&profid={{ prof.id }}&periodo=ves&data={{ data|date:"d/m/Y" }}" class="btn-floating btn-tiny waves-effect waves-light blue">#}
+{#                                        <i class="small material-icons">add</i>#}
+{#                                      </a>#}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
+
+
+{#                  </div>#}
+{#                </li>#}
+{#                    </div>#}
+{#                </div>#}
+
+
+
+
+
+                {% endfor %}
+
+
+
+
+          </ul>
+
+
+
+
+
+
+{#            <ul class="tabs">#}
+{#                {% for prof in profs %}#}
+{#                    <li class="tab col"><a  href="#tb{{ prof.id }}">{{ prof.get_especialidade_display }}</a></li>#}
+{#                {% endfor %}#}
+{#            </ul>#}
+        </div>
+
+{#        {% for prof in profs %}#}
+
+{#        <div id="tb{{ prof.id }}" class="col s12" >#}
+{#            <h6>Nome: {{ prof.nome }} &emsp; <a  href="/diasDisponiveis?idprof={{ prof.id }}">Verificar disponibilidade</a> </h6>#}
+{#            <table class="bordered" >#}
+{#                <thead>#}
+{#                <tr>#}
+{#                    <th>Período</th>#}
+{#                    <th>Consultas</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                <tr>#}
+{#                    <td width="150px;"><b>Matutino</b></td>#}
+{#                    <td>#}
+{#                        <table>#}
+{#                                <tr>#}
+{#                                    <td>Nome</td>#}
+{#                                    <td>Horário</td>#}
+{#                                    <td>Ações</td>#}
+{#                                </tr>#}
+{#                                {% for p in consultasList %}#}
+{#                                    {% ifequal p.periodo "mat" %}#}
+{#                                        {% ifequal prof.id p.profissional.id %}#}
+{#                                                <tr>#}
+{#                                                    <td> <a href="/pacienteman?pacienteid={{ p.paciente.id }}">{{ p.paciente.nome }}</a>#}
+{#                                                        </td>#}
+{#                                                    <td>{{ p.hora }}</td>#}
+{#                                                    <td>#}
+{#                                                        {{ p.get_status_display }}#}
+{#                                                        <a href="#" onclick="cgStatus({{ p.id }});">#}
+{#                                                            Alterar#}
+{#                                                        </a>#}
+{#                                                        <input type="hidden" id="nome{{ p.id }}" value="{{ p.paciente.nome }}"/>#}
+{#                                                        <input type="hidden" id="hora{{ p.id }}" value="{{ p.hora }}"/>#}
+{#                                                        <input type="hidden" id="anot{{ p.id }}" value="{{ p.anotacoes }}"/>#}
+{#                                                        <input type="hidden" id="st{{ p.id }}" value="{{ p.status }}"/>#}
+{#                                                    </td>#}
+{##}
+{#                                                </tr>#}
+{#                                            {% endifequal %}#}
+{#                                    {% endifequal %}#}
+{#                                 {% endfor %}#}
+{#                        </table>#}
+{#                         <a href="/pacientelist?page=0&profid={{ prof.id }}&periodo=mat&data={{ data|date:"d/m/Y" }}" class="btn-floating btn-tiny waves-effect waves-light yellow">#}
+{#                        <i class="small material-icons">add</i>#}
+{#                      </a>#}
+{#                    </td>#}
+{#                </tr>#}
+{##}
+{#                <tr>#}
+{#                    <td><b>Vespertino</b></td>#}
+{#                    <td>#}
+{#                       <table>#}
+{#                            <tr>#}
+{#                                <td>Nome</td>#}
+{#                                <td>Horário</td>#}
+{#                                <td>Ações</td>#}
+{#                            </tr>#}
+{#                           {% for p in consultasList %}#}
+{#                                    {% ifequal p.periodo "ves" %}#}
+{#                                        {% ifequal prof.id p.profissional.id %}#}
+{#                                            <tr>#}
+{#                                                <td>{{ p.paciente.nome }}</td>#}
+{#                                                <td>{{ p.hora }}</td>#}
+{#                                                <td>#}
+{#                                                        {{ p.get_status_display }}#}
+{#                                                        <a href="#" onclick="cgStatus({{ p.id }});">#}
+{#                                                            Alterar#}
+{#                                                        </a>#}
+{#                                                         <input type="hidden" id="nome{{ p.id }}" value="{{ p.paciente.nome }}"/>#}
+{#                                                        <input type="hidden" id="hora{{ p.id }}" value="{{ p.hora }}"/>#}
+{#                                                        <input type="hidden" id="anot{{ p.id }}" value="{{ p.anotacoes }}"/>#}
+{#                                                        <input type="hidden" id="st{{ p.id }}" value="{{ p.status }}"/>#}
+{#                                                    </td>#}
+{#                                            </tr>#}
+{#                                        {% endifequal %}#}
+{#                                    {% endifequal %}#}
+{#                           {% endfor %}#}
+{#                        </table>#}
+{#                       <a href="/pacientelist?page=0&profid={{ prof.id }}&periodo=ves&data={{ data|date:"d/m/Y" }}" class="btn-floating btn-tiny waves-effect waves-light blue">#}
+{#                        <i class="small material-icons">add</i>#}
+{#                      </a>#}
+{#                    </td>#}
+{#                </tr>#}
+{#                </tbody>#}
+{#            </table>#}
+{##}
+{#        </div>#}
+
+{#    {% endfor %}#}
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+{#            $('ul.tabs').tabs('select_tab', 'tb{{ lastid }}');#}
+
+            {% for tb in trab %}
+                console.log({{ tb }});
+
+
+                {% ifequal tb.1 0 %}
+                    $("#m{{ tb.0 }}").hide();
+                {% endifequal %}
+
+                {% ifequal tb.2 0 %}
+                    $("#v{{ tb.0 }}").hide();
+                {% endifequal %}
+
+
+            {% endfor %}
+
+        });
+
+
+        function cgStatus(val)
+        {
+            idconsultachange = val;
+
+            var vold = $("#st"+idconsultachange).val();
+
+            $("#stnome").html($("#nome"+idconsultachange).val());
+            $("#sthora").html($("#hora"+idconsultachange).val());
+
+            //
+            $("#status").val(vold);
+            $("#status").material_select(); // Atualiza o programa
+
+
+            // Evita valores com None
+            if ($("#anot"+val).val() != "None") {
+                $("#infoextras").val($("#anot"+val).val());
+            } else {
+                $("#infoextras").val('');
+            }
+
+            $('#changeStatus').modal('open');
+        }
+
+        function remover(idr, nome)
+        {
+            var r = confirm("Deseja remover o id"+idr+" de nome: "+nome);
+
+            if (r == true) {
+                $.ajax({
+                    url: "/remConsulta",
+                    cache: false,
+                    type: "POST",
+                    datatype: 'json',
+                    async: false,
+                    data: {
+                        "id": idr,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function (resp) {
+                        myr = resp;
+
+                        {#                        alert("Resp: "+resp);#}
+
+                        if (resp == -1) {
+                            alert("Ocorreu um erro na remoção do registro!!!");
+                        } else {
+                            alert("Dado removido com sucesso!!!");
+                            window.location.href = "/consultas?data=" + resp.data + "&lastid=" + resp.lastid;
+                        }
+                    }
+                });
+            }
+
+        }
+
+    </script>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base2.html" %}
+
+{% load material_form %}
+{% block conteudo %}
+    <div style="max-width: 600px;">
+        <form method="POST" action="">
+            {% ifequal action "" %}
+                <h3>Novo registro</h3>
+            {% else %}
+                <h3>Editar</h3>
+            {% endifequal %}
+            {% csrf_token %}
+            <div style="color: red">
+            
+                <ol>
+                {% for erro in form.errors %}
+                    <li>{{ erro }}</li>
+                {% endfor %}
+                </ol>
+            </div>
+
+            <input type="hidden" value="{{ id }}" name="id" />
+            {% form form=form %}{% endform %}
+            <input type="submit" class="btn" value="Salvar" />
+        </form>
+    </div>
+{% endblock %}
+
+

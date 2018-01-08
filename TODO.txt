@@ -1,0 +1,19 @@
+usuario: admin
+senha: capstmental
+
+
+
+Upload de relatórios do caps:
+  - Documentos relat.- 1 para a equipe
+  - Relatorio por periodo inicial e final
+  -- upload de receitas emitidas pelos profs. - 1 por prof.
+  -- Evolução
+
+
+
+Relatório de consultas por paciente
+    - Consultas realizadas -- histórico - OK
+        - Data, horário, profissional, especialidade e se foi receitado algum medicamento
+
+
+

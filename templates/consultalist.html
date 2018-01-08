@@ -1,0 +1,565 @@
+{% extends "base2.html" %}
+
+{% block conteudo %}
+    <button data-target="Pesquisar" class="btn waves-effect waves-light modal-trigger">Outro dia</button>
+    &nbsp;<button data-target="relatorio" class="btn waves-effect waves-light modal-trigger">Relatório</button>
+
+    <br />
+    <br />
+
+    <div id="Pesquisar" class="modal">
+        <div class="modal-content">
+          <h4>Defina uma data</h4>
+          <p> <input type="date" id="datacon" /></p>
+        </div>
+        <div class="modal-footer">
+            <input type="button" value="Ver consultas desta data" onclick="verconsulta();" class="modal-action modal-close waves-effect waves-green btn blue" />
+        </div>
+        <script>
+            function  verconsulta() {
+                window.location.href = "/consultas?data="+$("#datacon").val();
+            }
+        </script>
+    </div>
+
+    <div id="changeStatus" class="modal">
+        <div class="modal-content">
+            <p>
+                <label for="stnome">Nome:</label>
+                <p id="stnome"></p>
+            </p>
+            <p>
+                <label for="sthora">Hora:</label>
+                <p id="sthora"></p>
+            </p>
+              <label for="status">Como a consulta aconteceu</label>
+            <div class="input-field">
+              <select  name="status" id="status">
+                  <option value="pend">Pendente</option>
+                  <option value="conc">Concluído</option>
+                  <option value="des">Desistido</option>
+                  <option value="rem">Remarcado</option>
+                  <option value="falt">Faltou</option>
+              </select></div>
+
+            <p><label for="infoextras">Outras informações</label>
+            <textarea class="materialize-textarea"  name="infoextras" id="infoextras"></textarea></p>
+
+        </div>
+        <div class="modal-footer">
+            <input type="button" value="Mudar status" onclick="changeStatus();" class="modal-action modal-close waves-effect waves-green btn blue" />
+        </div>
+        <script>
+            var idconsultachange;
+            function changeStatus()
+            {
+
+                // Fazer um post e caso positivo, atualiza a página.
+
+
+
+                 $.ajax({
+                    url:  "/changeStatus",
+                    cache: false,
+                    type: "POST",
+                    //datatype: 'json',
+                    async: false,
+                    data: {
+                            "idconsulta": idconsultachange,
+                            "status": $("#status").val(),
+                            "anotacao": $("#infoextras").val(),
+
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(resp) {
+                        if ( resp == 1 ) {
+                            alert("Dados cadastrados com sucesso!!!");
+                            location.reload();
+                            //
+                        } else {
+                            alert("Ocorreu um erro em modificar o status    !!!");
+                        }
+                    }
+                });
+
+            }
+        </script>
+
+    </div>
+
+    <div id="relatorio" class="modal">
+        <div class="modal-content">
+              <h4>Relatório de um intervalo</h4>
+              <p>
+                  <label for="profl"></label>
+                  <select name="profl" id="profl">
+                      <option value="t">Todos</option>
+                      {% for prof in profs %}
+                            <option value="{{ prof.id }}">{{ prof.user.get_full_name }}</option>
+                      {% endfor %}
+                  </select>
+                  <label for="datainicialr"></label>
+                  Data inicial:
+                  <input type="date" name="datainicialr" id="datainicialr" />
+                  <br/>
+                  <label for="datafinalr">Data final:</label>
+                  <input type="date" name="datainicialr" id="datafinalr" />
+                  <br/>
+                  Obs.: Não gere relatórios de datas muito distantes, pois isto poderá gerar arquivos muito grandes!!!
+              </p>
+        </div>
+
+        <div class="modal-footer">
+            <input type="button" class="btn waves-effect waves-light" value="Gerar" onclick="genRelatorio();" />
+
+<script>
+    function genRelatorio()
+    {
+        window.open('/relatorio?datainicialr='+$("#datainicialr").val()+"&datafinalr="+$("#datafinalr").val()+"&lista="+$("#profl").val(), '_blank');
+
+    }
+</script>
+
+        </div>
+    </div>
+
+    <div id="novaConsulta" class="modal">
+            {% csrf_token %}
+            <div class="modal-content">
+              <h4>Nova consulta</h4>
+              <p>
+                  Nome: {{ pacientenome }} <br />
+                  <input type="hidden" name="idpaciente" value="{{ idpaciente }}" id="idpaciente" />
+                  <input type="hidden" name="idprofissional" value="{{ profissional.id }}" id="idprofissional" />
+
+                  Profissional: {{ profissional.user.get_full_name }} <br />
+                  <input type="hidden" name="especialidade" value="{{ profissional.especialidade }}" id="especialidade" />
+
+                  Função: {{ profissional.get_especialidade_display }} <br />
+                  Data: {{ datacad }} <br />
+
+                  <input type="hidden" name="datacad" value="{{ datacad }}" id="datacad" />
+                  <input type="hidden" name="periodo" value="{{ periodo }}" id="periodo" />
+                  Período:
+                  {% ifequal periodo "mat" %}
+                    Matutino
+                  {% else %}
+                      Vespertino
+                  {% endifequal %}
+                  <br />
+                  Horário:
+                  <input type="timepicker"  id="horariocad" name="horariocad" style="max-width: 80px;" />
+              </p>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Marcar consulta" class="btn waves-effect waves-light" onclick="cadConsulta();" />
+            </div>
+        <script>
+            $(document).ready(function(){
+                 {% ifequal periodo "mat" %}
+                    $('#horariocad').pickatime({ formatSubmit: 'HH:i' ,
+                            format: 'HH:i',
+                            interval: 10,
+                            min: [6,30],
+                            max: [12,0] });
+
+                  {% else %}
+                    $('#horariocad').pickatime({ formatSubmit: 'HH:i' ,
+                            format: 'HH:i',
+                            interval: 10,
+                            min: [12,0],
+                            max: [18,0] });
+
+                  {% endifequal %}
+
+                $('#horariocad').on('open', function() {
+                    $('#horariocad').appendTo('body');
+                });
+            });
+
+            var myr;
+
+            function cadConsulta()
+            {
+                $.ajax({
+                    url:  "/marcarconsulta",
+                    cache: false,
+                    type: "POST",
+                    datatype: 'json',
+                    async: false,
+                    data: {
+                                "datacad": $("#datacad").val(),
+                                "especialidade": $("#especialidade").val(),
+                                "idprofissional": $("#idprofissional").val(),
+                                "idpaciente": $("#idpaciente").val(),
+                                "horariocad": $("#horariocad").val(),
+                                "periodo": $("#periodo").val(),
+                                csrfmiddlewaretoken: '{{ csrf_token }}'
+                            },
+                    success: function(resp) {
+                        myr = resp;
+
+                        if ( resp == -1 ) {
+                            alert("Ocorreu um erro na inserção do registro!!!");
+                        } else if(resp == -2){
+                          alert("Número de consultas já excedeu o limite máximo!!!");
+                        }
+                        else {
+                            alert("Dados cadastrados com sucesso!!!");
+                            window.location.href = "/consultas?data="+resp.data+"&lastid="+resp.lastid;
+                        }
+                    }
+                });
+            }
+        </script>
+    </div>
+
+    <script>
+
+      $(document).ready(function(){
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal').modal();
+
+
+         $('ul.tabs').tabs({ 'swipeable': true, responsiveThreshold: false });
+          {% ifequal cad '1' %}
+              // Mostrar janela
+              $('#novaConsulta').modal('open');
+          {% endifequal %}
+
+      });
+
+    </script>
+
+    <h6>Data: {{ data|date:"d/m/Y -- l" }}   </h6>
+    <br />
+    <script>
+     $(document).ready(function(){
+    $('.collapsible').collapsible({accordion: true});
+
+         {% if lastid %}
+             $('#{{ lastid }} > div').click();
+         {% endif %}
+  });
+    </script>
+    <div class="row">
+        <div class="col s12">
+
+            <ul class="collapsible popout" data-collapsible="accordion">
+
+                {% for prof in profs %}
+
+                 <li  id="{{ prof.id }}" >
+                  <div  class="collapsible-header">{{ prof.get_especialidade_display }}: {{ prof.user.get_full_name }} </div>
+                  <div class="collapsible-body">
+
+                            <h6>Nome: {{ prof.user.get_full_name }} <a href="/diasDisponiveis?idprof={{ prof.id }}">Verificar disponibilidade</a> </h6>
+                            <table class="bordered" >
+                                <thead>
+                                <tr>
+                                    <th>Período</th>
+                                    <th>Consultas</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="m{{ prof.id }}">
+                                    <td width="150px;"><b>Matutino</b></td>
+                                    <td>
+                                        <table>
+                                                <tr>
+                                                    <td>Nome</td>
+                                                    <td>Horário</td>
+                                                    <td>Ações</td>
+                                                </tr>
+                                                {% for p in consultasList %}
+                                                    {% ifequal p.periodo "mat" %}
+                                                        {% ifequal prof.id p.profissional.id %}
+                                                                <tr>
+                                                                    <td> <a target="_blank" href="/pacienteman?pacienteid={{ p.paciente.id }}">{{ p.paciente.nome }}</a>
+                                                                        </td>
+                                                                    <td>{{ p.hora }}</td>
+                                                                    <td>
+                                                                        {{ p.get_status_display }}
+                                                                        <a href="#" onclick="cgStatus({{ p.id }});">
+                                                                            Alterar
+                                                                        </a>
+                                                                        &emsp;
+
+                                                                        <a href="#" onclick="remover({{ p.id }},'{{ p.paciente.nome }}');">
+                                                                            Remover
+                                                                        </a>
+                                                                        <input type="hidden" id="nome{{ p.id }}" value="{{ p.paciente.nome }}"/>
+                                                                        <input type="hidden" id="hora{{ p.id }}" value="{{ p.hora }}"/>
+                                                                        <input type="hidden" id="anot{{ p.id }}" value="{{ p.anotacoes }}"/>
+                                                                        <input type="hidden" id="st{{ p.id }}" value="{{ p.status }}"/>
+                                                                    </td>
+                                                                </tr>
+                                                            {% endifequal %}
+                                                    {% endifequal %}
+                                                 {% endfor %}
+                                        </table>
+                                         <a href="/pacientelist?page=0&profid={{ prof.id }}&periodo=mat&data={{ data|date:"d/m/Y" }}" class="btn-floating btn-tiny waves-effect waves-light yellow">
+                                        <i class="small material-icons">add</i>
+                                      </a>
+                                    </td>
+                                </tr>
+
+                                <tr id="v{{ prof.id }}">
+                                    <td><b>Vespertino</b></td>
+                                    <td>
+                                       <table>
+                                            <tr>
+                                                <td>Nome</td>
+                                                <td>Horário</td>
+                                                <td>Ações</td>
+                                            </tr>
+                                           {% for p in consultasList %}
+                                                    {% ifequal p.periodo "ves" %}
+                                                        {% ifequal prof.id p.profissional.id %}
+                                                            <tr>
+                                                                <td> <a target="_blank" href="/pacienteman?pacienteid={{ p.paciente.id }}">{{ p.paciente.nome }}</a>
+                                                                        </td>
+                                                                <td>{{ p.hora }}</td>
+                                                                <td>
+                                                                        {{ p.get_status_display }}
+                                                                        <a href="#" onclick="cgStatus({{ p.id }});">
+                                                                            Alterar
+                                                                        </a>
+                                                                    &emsp;
+                                                                        <a href="#" onclick="remover({{ p.id }},'{{ p.paciente.nome }}');">
+                                                                            Remover
+                                                                        </a>
+                                                                         <input type="hidden" id="nome{{ p.id }}" value="{{ p.paciente.nome }}"/>
+                                                                        <input type="hidden" id="hora{{ p.id }}" value="{{ p.hora }}"/>
+                                                                        <input type="hidden" id="anot{{ p.id }}" value="{{ p.anotacoes }}"/>
+                                                                        <input type="hidden" id="st{{ p.id }}" value="{{ p.status }}"/>
+                                                                    </td>
+                                                            </tr>
+                                                        {% endifequal %}
+                                                    {% endifequal %}
+                                           {% endfor %}
+                                        </table>
+                                       <a href="/pacientelist?page=0&profid={{ prof.id }}&periodo=ves&data={{ data|date:"d/m/Y" }}" class="btn-floating btn-tiny waves-effect waves-light blue">
+                                        <i class="small material-icons">add</i>
+                                      </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+
+
+
+                  </div>
+                </li>
+
+
+
+
+                {% endfor %}
+
+
+
+
+          </ul>
+
+
+
+
+
+
+{#            <ul class="tabs">#}
+{#                {% for prof in profs %}#}
+{#                    <li class="tab col"><a  href="#tb{{ prof.id }}">{{ prof.get_especialidade_display }}</a></li>#}
+{#                {% endfor %}#}
+{#            </ul>#}
+        </div>
+
+{#        {% for prof in profs %}#}
+
+{#        <div id="tb{{ prof.id }}" class="col s12" >#}
+{#            <h6>Nome: {{ prof.nome }} &emsp; <a  href="/diasDisponiveis?idprof={{ prof.id }}">Verificar disponibilidade</a> </h6>#}
+{#            <table class="bordered" >#}
+{#                <thead>#}
+{#                <tr>#}
+{#                    <th>Período</th>#}
+{#                    <th>Consultas</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                <tr>#}
+{#                    <td width="150px;"><b>Matutino</b></td>#}
+{#                    <td>#}
+{#                        <table>#}
+{#                                <tr>#}
+{#                                    <td>Nome</td>#}
+{#                                    <td>Horário</td>#}
+{#                                    <td>Ações</td>#}
+{#                                </tr>#}
+{#                                {% for p in consultasList %}#}
+{#                                    {% ifequal p.periodo "mat" %}#}
+{#                                        {% ifequal prof.id p.profissional.id %}#}
+{#                                                <tr>#}
+{#                                                    <td> <a href="/pacienteman?pacienteid={{ p.paciente.id }}">{{ p.paciente.nome }}</a>#}
+{#                                                        </td>#}
+{#                                                    <td>{{ p.hora }}</td>#}
+{#                                                    <td>#}
+{#                                                        {{ p.get_status_display }}#}
+{#                                                        <a href="#" onclick="cgStatus({{ p.id }});">#}
+{#                                                            Alterar#}
+{#                                                        </a>#}
+{#                                                        <input type="hidden" id="nome{{ p.id }}" value="{{ p.paciente.nome }}"/>#}
+{#                                                        <input type="hidden" id="hora{{ p.id }}" value="{{ p.hora }}"/>#}
+{#                                                        <input type="hidden" id="anot{{ p.id }}" value="{{ p.anotacoes }}"/>#}
+{#                                                        <input type="hidden" id="st{{ p.id }}" value="{{ p.status }}"/>#}
+{#                                                    </td>#}
+{##}
+{#                                                </tr>#}
+{#                                            {% endifequal %}#}
+{#                                    {% endifequal %}#}
+{#                                 {% endfor %}#}
+{#                        </table>#}
+{#                         <a href="/pacientelist?page=0&profid={{ prof.id }}&periodo=mat&data={{ data|date:"d/m/Y" }}" class="btn-floating btn-tiny waves-effect waves-light yellow">#}
+{#                        <i class="small material-icons">add</i>#}
+{#                      </a>#}
+{#                    </td>#}
+{#                </tr>#}
+{##}
+{#                <tr>#}
+{#                    <td><b>Vespertino</b></td>#}
+{#                    <td>#}
+{#                       <table>#}
+{#                            <tr>#}
+{#                                <td>Nome</td>#}
+{#                                <td>Horário</td>#}
+{#                                <td>Ações</td>#}
+{#                            </tr>#}
+{#                           {% for p in consultasList %}#}
+{#                                    {% ifequal p.periodo "ves" %}#}
+{#                                        {% ifequal prof.id p.profissional.id %}#}
+{#                                            <tr>#}
+{#                                                <td>{{ p.paciente.nome }}</td>#}
+{#                                                <td>{{ p.hora }}</td>#}
+{#                                                <td>#}
+{#                                                        {{ p.get_status_display }}#}
+{#                                                        <a href="#" onclick="cgStatus({{ p.id }});">#}
+{#                                                            Alterar#}
+{#                                                        </a>#}
+{#                                                         <input type="hidden" id="nome{{ p.id }}" value="{{ p.paciente.nome }}"/>#}
+{#                                                        <input type="hidden" id="hora{{ p.id }}" value="{{ p.hora }}"/>#}
+{#                                                        <input type="hidden" id="anot{{ p.id }}" value="{{ p.anotacoes }}"/>#}
+{#                                                        <input type="hidden" id="st{{ p.id }}" value="{{ p.status }}"/>#}
+{#                                                    </td>#}
+{#                                            </tr>#}
+{#                                        {% endifequal %}#}
+{#                                    {% endifequal %}#}
+{#                           {% endfor %}#}
+{#                        </table>#}
+{#                       <a href="/pacientelist?page=0&profid={{ prof.id }}&periodo=ves&data={{ data|date:"d/m/Y" }}" class="btn-floating btn-tiny waves-effect waves-light blue">#}
+{#                        <i class="small material-icons">add</i>#}
+{#                      </a>#}
+{#                    </td>#}
+{#                </tr>#}
+{#                </tbody>#}
+{#            </table>#}
+{##}
+{#        </div>#}
+
+{#    {% endfor %}#}
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+{#            $('ul.tabs').tabs('select_tab', 'tb{{ lastid }}');#}
+
+            {% for tb in trab %}
+                console.log({{ tb }});
+
+
+                {% ifequal tb.1 0 %}
+                    $("#m{{ tb.0 }}").hide();
+                {% endifequal %}
+
+                {% ifequal tb.2 0 %}
+                    $("#v{{ tb.0 }}").hide();
+                {% endifequal %}
+
+
+            {% endfor %}
+
+        });
+
+
+        function cgStatus(val)
+        {
+            idconsultachange = val;
+
+            var vold = $("#st"+idconsultachange).val();
+
+            $("#stnome").html($("#nome"+idconsultachange).val());
+            $("#sthora").html($("#hora"+idconsultachange).val());
+
+            //
+            $("#status").val(vold);
+{#            $("#status").material_select(); // Atualiza o programa#}
+
+
+            // Evita valores com None
+            if ($("#anot"+val).val() != "None") {
+                $("#infoextras").val($("#anot"+val).val());
+            } else {
+                $("#infoextras").val('');
+            }
+
+            $('#changeStatus').modal('open');
+        }
+
+        function remover(idr, nome)
+        {
+            var r = confirm("Deseja remover o id"+idr+" de nome: "+nome);
+
+            if (r == true) {
+                $.ajax({
+                    url: "/remConsulta",
+                    cache: false,
+                    type: "POST",
+                    datatype: 'json',
+                    async: false,
+                    data: {
+                        "id": idr,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function (resp) {
+                        myr = resp;
+
+                        {#                        alert("Resp: "+resp);#}
+
+                        if (resp == -1) {
+                            alert("Ocorreu um erro na remoção do registro!!!");
+                        } else {
+                            alert("Dado removido com sucesso!!!");
+                            window.location.href = "/consultas?data=" + resp.data + "&lastid=" + resp.lastid;
+                        }
+                    }
+                });
+            }
+
+        }
+
+    </script>
+
+    <script>
+
+
+    $(document).ready(function(){
+{#          $('select').material_select('destroy');#}
+          $('select').material_select();
+
+
+    });
+    </script>
+
+
+
+{% endblock %}

@@ -1,0 +1,386 @@
+<form method="POST" ng-controller="pacientectl" >
+<md-content class="md-padding" layout-xs="column" layout="row">
+
+<md-card>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline" id="labelpaciente">Novo paciente</span>
+          </md-card-title-text>
+        </md-card-title>
+
+      <md-card-content>
+      <md-input-container class="md-block">
+        <label>Número do SUS</label>
+        <input md-maxlength="30" required width="30" name="numsus" ng-model="pc.numsus">
+        <div ng-messages="numsus.$error">
+          <div ng-message="required">Isto é requerido.</div>
+        </div>
+      </md-input-container>
+
+      <md-input-container class="md-block">
+        <label>Nome</label>
+        <input md-maxlength="30" required md-no-asterisk name="nome" ng-model="pc.nome">
+        <div ng-messages="nome.$error">
+          <div ng-message="required">Isto é requerido.</div>
+          <div ng-message="md-maxlength">O campo pode ter até 255 caracteres</div>
+        </div>
+      </md-input-container>
+
+
+
+      <h2>Endereço</h2>
+
+
+      <div layout="row">
+
+          <md-input-container flex="20">
+              <label>Tipo</label>
+              <md-select name="tipoendereco" ng-model="pc.tipoendereco">
+                <md-option value=""></md-option>
+                <md-option value="Aeroporto">Aeroporto</md-option>
+                <md-option value="Alameda">Alameda</md-option>
+                <md-option value="Área">Área</md-option>
+                <md-option value="Avenida">Avenida</md-option>
+                <md-option value="Campo">Campo</md-option>
+                <md-option value="Chácara">Chácara</md-option>
+                <md-option value="Colônia">Colônia</md-option>
+                <md-option value="Condomínio">Condomínio</md-option>
+                <md-option value="Conjunto">Conjunto</md-option>
+                <md-option value="Distrito">Distrito</md-option>
+                <md-option value="Esplanada">Esplanada</md-option>
+                <md-option value="Estação">Estação</md-option>
+                <md-option value="Estrada">Estrada</md-option>
+                <md-option value="Favela">Favela</md-option>
+                <md-option value="Fazenda">Fazenda</md-option>
+                <md-option value="Feira">Feira</md-option>
+                <md-option value="Jardim">Jardim</md-option>
+                <md-option value="Ladeira">Ladeira</md-option>
+                <md-option value="Lago">Lago</md-option>
+                <md-option value="Lagoa">Lagoa</md-option>
+                <md-option value="Largo">Largo</md-option>
+                <md-option value="Loteamento">Loteamento</md-option>
+                <md-option value="Morro">Morro</md-option>
+                <md-option value="Núcleo">Núcleo</md-option>
+                <md-option value="Parque">Parque</md-option>
+                <md-option value="Passarela">Passarela</md-option>
+                <md-option value="Pátio">Pátio</md-option>
+                <md-option value="Praça">Praça</md-option>
+                <md-option value="Quadra">Quadra</md-option>
+                <md-option value="Recanto">Recanto</md-option>
+                <md-option value="Residencial">Residencial</md-option>
+                <md-option value="Rodovia">Rodovia</md-option>
+                <md-option value="Rua">Rua</md-option>
+                <md-option value="Setor">Setor</md-option>
+                <md-option value="Sítio">Sítio</md-option>
+                <md-option value="Travessa">Travessa</md-option>
+                <md-option value="Trecho">Trecho</md-option>
+                <md-option value="Trevo">Trevo</md-option>
+                <md-option value="Vale">Vale</md-option>
+                <md-option value="Vereda">Vereda</md-option>
+                <md-option value="Via">Via</md-option>
+                <md-option value="Viaduto">Viaduto</md-option>
+                <md-option value="Viela">Viela</md-option>
+                <md-option value="Vila">Vila</md-option>
+            </md-select>
+
+
+
+
+          </md-input-container>
+
+
+           <md-input-container flex="70">
+              <label>Logradouro</label>
+              <input md-maxlength="255" required name="logradouro" ng-model="pc.logradouro">
+            </md-input-container>
+
+            <md-input-container flex="10">
+              <label>Número</label>
+              <input md-maxlength="15" required name="logradouronum" ng-model="pc.logradouronum">
+            </md-input-container>
+      </div>
+
+      <md-input-container class="md-block">
+        <label>Ponto de referência</label>
+        <input md-maxlength="30" md-no-asterisk width="255" name="pontoreferencia" ng-model="pc.pontoreferencia">
+      </md-input-container>
+
+      <md-input-container class="md-block">
+        <label>Bairro</label>
+        <input md-maxlength="30" width="255" name="bairro" ng-model="pc.bairro">
+      </md-input-container>
+
+      <md-input-container class="md-block">
+        <label>Cidade</label>
+        <input md-maxlength="255" width="255" name="cidade" ng-model="pc.cidade">
+      </md-input-container>
+
+
+      <md-input-container class="md-block">
+        <label>Estado</label>
+          <md-select name="uf" ng-model="pc.uf">
+            <md-option value=""></md-option>
+            <md-option value="AC">AC</md-option>
+            <md-option value="AL">AL</md-option>
+            <md-option value="AM">AM</md-option>
+            <md-option value="AP">AP</md-option>
+            <md-option value="BA">BA</md-option>
+            <md-option value="CE">CE</md-option>
+            <md-option value="DF">DF</md-option>
+            <md-option value="ES">ES</md-option>
+            <md-option value="GO">GO</md-option>
+            <md-option value="MA">MA</md-option>
+            <md-option value="MG">MG</md-option>
+            <md-option value="MS">MS</md-option>
+            <md-option value="MT">MT</md-option>
+            <md-option value="PA">PA</md-option>
+            <md-option value="PB">PB</md-option>
+            <md-option value="PE">PE</md-option>
+            <md-option value="PI">PI</md-option>
+            <md-option value="PR">PR</md-option>
+            <md-option value="RJ">RJ</md-option>
+            <md-option value="RN">RN</md-option>
+            <md-option value="RO">RO</md-option>
+            <md-option value="RR">RR</md-option>
+            <md-option value="RS">RS</md-option>
+            <md-option value="SC">SC</md-option>
+            <md-option value="SE">SE</md-option>
+            <md-option value="SP">SP</md-option>
+            <md-option value="TO">TO</md-option>
+            </md-select>
+      </md-input-container>
+
+          <h2>Contato</h2>
+      <md-input-container class="md-block">
+        <label>Fone</label>
+        <input md-maxlength="255" id="id_fone" width="255" name="fone" ng-model="pc.fone">
+      </md-input-container>
+
+
+    <h2>Documentos</h2>
+
+
+      <div layout="row">
+
+
+      <md-input-container class="md-block" flex="40">
+        <label>Certidão</label>
+        <md-select ng-model="pc.certidao" name="certidao">
+            <md-option value="nas">Nascimento</md-option>
+            <md-option value="cas">Casamento</md-option>
+            <md-option value="div">Divórcio</md-option>
+        </md-select>
+      </md-input-container>
+
+        <md-input-container class="md-block" flex="10">
+        <label>Livro</label>
+        <input md-maxlength="100" name="livro" ng-model="pc.livro">
+      </md-input-container>
+
+        <md-input-container class="md-block" flex="10">
+        <label>Folha</label>
+        <input md-maxlength="100" name="fls" ng-model="pc.fls">
+      </md-input-container>
+
+      <md-input-container class="md-block" flex="10">
+        <label>Termo</label>
+        <input md-maxlength="100" name="termo" ng-model="pc.termo">
+      </md-input-container>
+
+      <md-input-container class="md-block" flex="30">
+        <md-datepicker ng-model="pc.dataemissao" name="dataemissao" placeholder="Data de emissão" ></md-datepicker>
+
+      </md-input-container>
+
+      </div>
+
+      <md-input-container class="md-block">
+        <md-datepicker ng-model="pc.datanascimento" name="datanascimento" placeholder="Nascimento" ></md-datepicker>
+      </md-input-container>
+
+          <h3>RG</h3>
+          <div layout="row">
+      <md-input-container class="md-block" flex="20">
+        <label>RG</label>
+        <input md-maxlength="50" name="rg" ng-model="pc.rg">
+      </md-input-container>
+
+      <md-input-container class="md-block" flex="40">
+        <label>Orgão emissor</label>
+          <md-select name="rgorgemissor" ng-model="pc.rgorgemissor">
+              <md-option value='SSP'>Secretaria de Segurança Pública</md-option>
+            <md-option value='PM'>Polícia Militar</md-option>
+            <md-option value='PC'>Policia Civil</md-option>
+            <md-option value='CNT'>Carteira Nacional de Habilitação</md-option>
+            <md-option value='DIC'>Diretoria de Identificação Civil</md-option>
+            <md-option value='CTPS'>Carteira de Trabaho e Previdência Social</md-option>
+            <md-option value='FGTS'>Fundo de Garantia do Tempo de Serviço</md-option>
+            <md-option value='IFP'>Instituto Félix Pacheco</md-option>
+            <md-option value='IPF'>Instituto Pereira Faustino</md-option>
+            <md-option value='IML'>Instituto Médico-Legal</md-option>
+            <md-option value='MTE'>Ministério do Trabalho e Emprego</md-option>
+            <md-option value='MMA'>Ministério da Marinha</md-option>
+            <md-option value='MAE'>Ministério da Aeronáutica</md-option>
+            <md-option value='MEX'>Ministério do Exército</md-option>
+            <md-option value='POF'>Polícia Federal</md-option>
+            <md-option value='POM'>Polícia Militar</md-option>
+            <md-option value='SES'>Carteira de Estrangeiro</md-option>
+            <md-option value='SJS'>Secretaria da Justiça e Segurança</md-option>
+            <md-option value='SJTS'>Secretaria da Justiça do Trabalho e Segurança</md-option>
+            <md-option value='ZZZ'>Outros (inclusive exterior</md-option>
+          </md-select>
+      </md-input-container>
+
+      <md-input-container class="md-block" flex="10">
+        <label>UF do RG</label>
+          <md-select name="rguf" ng-model="pc.rguf">
+            <md-option value=""></md-option>
+            <md-option value="AC">AC</md-option>
+            <md-option value="AL">AL</md-option>
+            <md-option value="AM">AM</md-option>
+            <md-option value="AP">AP</md-option>
+            <md-option value="BA">BA</md-option>
+            <md-option value="CE">CE</md-option>
+            <md-option value="DF">DF</md-option>
+            <md-option value="ES">ES</md-option>
+            <md-option value="GO">GO</md-option>
+            <md-option value="MA">MA</md-option>
+            <md-option value="MG">MG</md-option>
+            <md-option value="MS">MS</md-option>
+            <md-option value="MT">MT</md-option>
+            <md-option value="PA">PA</md-option>
+            <md-option value="PB">PB</md-option>
+            <md-option value="PE">PE</md-option>
+            <md-option value="PI">PI</md-option>
+            <md-option value="PR">PR</md-option>
+            <md-option value="RJ">RJ</md-option>
+            <md-option value="RN">RN</md-option>
+            <md-option value="RO">RO</md-option>
+            <md-option value="RR">RR</md-option>
+            <md-option value="RS">RS</md-option>
+            <md-option value="SC">SC</md-option>
+            <md-option value="SE">SE</md-option>
+            <md-option value="SP">SP</md-option>
+            <md-option value="TO">TO</md-option>
+            </md-select>
+      </md-input-container>
+
+      <md-input-container class="md-block" flex="20">
+
+        <md-datepicker ng-model="pc.rgdataemissao" name="rgdataemissao" placeholder="Data de emissao do RG" ></md-datepicker>
+
+      </md-input-container>
+              </div>
+           <div layout="flex">
+      <md-input-container class="md-block" flex="50">
+        <label>CPF</label>
+        <input id="id_cpf" md-maxlength="50" name="cpf" ng-model="pc.cpf">
+      </md-input-container>
+
+      <md-input-container class="md-block" flex="50">
+        <label>Apelido</label>
+        <input md-maxlength="255" name="apelido" ng-model="pc.apelido">
+      </md-input-container>
+      </div>
+          <h2>Outras informações</h2>
+      <md-input-container class="md-block">
+        <label>Nome do pai</label>
+        <input md-maxlength="255" name="nomepai" ng-model="pc.nomepai">
+      </md-input-container>
+
+      <md-input-container class="md-block">
+        <label>Nome da mãe</label>
+        <input md-maxlength="255" name="nomemae" ng-model="pc.nomemae">
+      </md-input-container>
+
+      <md-input-container class="md-block">
+        <label>Nome do responsável</label>
+        <input md-maxlength="255" name="nomeresponsavel" ng-model="pc.nomeresponsavel">
+      </md-input-container>
+
+      <md-input-container class="md-block">
+        <label>Já fez tratamento?</label>
+        <md-select name="festratamento" ng-model="pc.festratamento">
+            <md-option value="Não">Não</md-option>
+            <md-option value="Sim">Sim</md-option>
+        </md-select>
+      </md-input-container>
+
+      <md-input-container class="md-block">
+        <label>Encaminhado por</label>
+        <input md-maxlength="255" name="encaminhadopor" ng-model="pc.encaminhadopor">
+      </md-input-container>
+
+
+          <h2>Etapas concluídas</h2>
+      <md-input-container class="md-block">
+          <md-checkbox ng-model="pc.entregadedocumentos">
+              Entrega de documentos
+          </md-checkbox>
+      </md-input-container>
+
+      <md-input-container class="md-block">
+            <md-checkbox ng-model="pc.avaliacaopsiquiatrica">
+              Avaliação psiquiatrica
+          </md-checkbox>
+      </md-input-container>
+
+      <md-input-container class="md-block">
+           <md-checkbox ng-model="pc.enfermagem">
+             Enfermagem
+          </md-checkbox>
+      </md-input-container>
+
+       <md-input-container class="md-block">
+            <md-checkbox ng-model="pc.psicologa">
+             Psicologa
+          </md-checkbox>
+      </md-input-container>
+
+       <md-input-container class="md-block">
+            <md-checkbox ng-model="pc.psicoterapeuta">
+             Psicoterapeuta
+          </md-checkbox>
+
+      </md-input-container>
+
+         <md-input-container class="md-block">
+             <md-checkbox ng-model="pc.assistentesocial">
+             Assistente social
+          </md-checkbox>
+          </md-input-container>
+
+
+         <md-input-container class="md-block">
+             <md-checkbox ng-model="pc.fisioterapeuta">
+             Fisioterapeuta
+          </md-checkbox>
+          </md-input-container>
+
+      <md-input-container class="md-block">
+           <md-checkbox ng-model="pc.terapeutaocupacional">
+             Terapeuta ocupacional
+          </md-checkbox>
+          </md-input-container>
+
+      </md-card-content>
+
+
+
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button class="md-raised md-primary" ng-click="pccad();">Salvar</md-button>
+        </md-card-actions>
+
+</md-card>
+
+</md-content>
+
+</form>
+<script language="javascript">
+    $(document).ready(function(){
+          $("#id_fone").mask("(99) 99999-9999");
+          $("#id_cpf").mask("999.999.999-99");
+
+    });
+
+</script>

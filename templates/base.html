@@ -1,0 +1,141 @@
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    {% load static %}
+
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="{% static "css/angular-material.min.css" %}">
+  <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
+  <script src="{% static "js/jquery-3.2.0.min.js" %}"></script>
+</head>
+<body ng-app="capsapp" ng-cloak>
+
+<div ng-controller="AppCtrl" layout="column" ng-cloak="" class="sidenavdemoCustomSidenav" ng-app="MyApp">
+
+      <md-content>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Settings" ng-disabled="true">
+            <a ng-click="toggleLeft()">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </a>
+        </md-button>
+
+        <h2 flex md-truncate>Centro de Atenção Psicossocial</h2>
+
+        <md-button class="md-icon-button" aria-label="Favorite">
+        </md-button>
+
+        <md-button class="md-icon-button" aria-label="More">
+
+        </md-button>
+      </div>
+    </md-toolbar>
+
+  </md-content>
+
+
+  <section layout="row" flex="">
+
+    <md-sidenav class="md-sidenav-left" md-component-id="left" md-disable-backdrop="" md-whiteframe="4">
+
+      <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools"><a ng-click="toggleLeft()">
+             <i class="fa fa-times" aria-hidden="true"></i>
+         </a>&thinsp;Menu </h1>
+
+      </md-toolbar>
+
+      <md-content layout-margin="">
+        <md-list flex>
+
+            <md-list-item class="md-2-line" ng-href="#pacientecad" ng-click="toggleLeft()">
+              <div class="md-list-item-text" layout="column">
+                <h4>Novo paciente</h4>
+                <p>Criar um paciente</p>
+              </div>
+            </md-list-item>
+
+            <md-list-item class="md-2-line" ng-href="#loginform" ng-click="toggleLeft()">
+              <div class="md-list-item-text" layout="column">
+                <h4>Login</h4>
+                <p>Entrar no sistema</p>
+              </div>
+            </md-list-item>
+
+            <md-list-item class="md-2-line" ng-href="/sair" >
+              <div class="md-list-item-text" layout="column">
+                <h4>Sair</h4>
+              </div>
+            </md-list-item>
+        </md-list>
+
+        <p><a href = "#loginform">Login Form</a></p>
+
+
+      </md-content>
+
+    </md-sidenav>
+
+    <md-content flex="" layout-padding="">
+
+      <div layout="row" style="min-height: 500px;" >
+        <div ng-view flex></div>
+      </div>
+
+    </md-content>
+
+  </section>
+
+</div>
+
+
+<div layout="row">
+
+</div>
+<div layout="row" class="md-padding" style="padding: 10px;">
+
+    <md-content flex="30">
+        <p>Desenvolvedor: Jacinto J. Franco e-mail: jacinto.franco@bag.ifmt.edu.br</p>
+    </md-content>
+    <md-content flex="70">
+
+          <p class="grey-text text-lighten-4">
+        Caps II - Barra do Garças-MT <BR/>
+             Endereço: Rua Francisco Lira, nº 1470, Bairro Sena Marques <br />
+Fone: (66) 3401-7905
+</p>
+
+    </md-content>
+</div>
+
+
+  <script src="{% static "js/jquery.inputmask.js" %}"></script>
+
+
+  <!-- Angular Material requires Angular.js Libraries -->
+  <script src="{% static "js/angular.min.js" %}"></script>
+  <script src="{% static "js/angular-animate.min.js" %}"></script>
+  <script src="{% static "js/angular-aria.min.js" %}"></script>
+  <script src="{% static "js/angular-messages.min.js" %}"></script>
+  <script src="{% static "js/angular-route.js" %}"></script>
+
+  <!-- Angular Material Library -->
+  <script src="{% static "js/angular-material.min.js" %}"></script>
+
+
+
+
+
+
+
+
+  <!-- Código da aplicação -->
+  <script src="{% static "js/app.js" %}"></script>
+
+</body>
+
+</html>

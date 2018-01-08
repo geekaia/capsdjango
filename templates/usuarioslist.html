@@ -1,0 +1,37 @@
+{% extends "base2.html" %}
+
+{% block conteudo %}
+     <table border="0">
+        <tr>
+            <form method="POST" ACTION="">
+                {% csrf_token %}
+                <td><input type="text" name="pesquisa" id="pesquisar" placeholder="Pesquisar um nome" /></td>
+                <td><input type="submit" class="btn" value="Pesquisar" /></td>
+             </form>
+        </tr>
+    </table>
+
+    <table border="0">
+            <thead>
+          <tr>
+              <th data-field="Nome">Nome</th>
+              <th data-field="Número SUS">Número SUS</th>
+              <th data-field="Ações">Ações</th>
+          </tr>
+        </thead>
+<tbody>
+{% for user in users %}
+    <tr>
+        <td>{{ prof.username}}</td>
+        <td>{{ prof.get_especialidade_display }}</td>
+        <td>
+            <a href="/profissionais?profid={{ prof.id }}"><i class="material-icons">mode_edit</i></a> &thinsp;&thinsp;&thinsp;&thinsp;&thinsp;
+            <a href="horariolist?idprof={{ prof.id }}">Horário</a>
+        </td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+    <a href="/profissionais?profid=0" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+
+{% endblock %}

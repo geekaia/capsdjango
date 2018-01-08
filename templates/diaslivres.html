@@ -1,0 +1,46 @@
+{% extends "base2.html" %}
+
+{% block conteudo %}
+    <h5>Dias livres de {{ nome }} </h5>
+
+    <table class="bordered" >
+    <thead>
+            <tr>
+                <th>Dia</th>
+                <th>Dia Sem.</th>
+                <th>Qt. Agend</th>
+                <th>Qt. Mat</th>
+                <th>Qt. disp Mat</th>
+                <th>Qt. Vesp</th>
+                <th>Qt. disp vesp</th>
+            </tr>
+    </thead>
+    <tbody>
+            {% for dia in dias %}
+                <tr>
+                    <td>
+                        {% if user.is_staff %}
+                            <a href="/consultas?data={{ dia.dia|date:"Y-m-d" }}&lastid={{ dia.profid }}">
+                            {{ dia.dia|date:"d/m/Y"  }}
+                        </a>
+                        {% else %}
+
+                            <a href="/minhasconsultas?data={{ dia.dia|date:"Y-m-d" }}&lastid={{ dia.profid }}">
+                            {{ dia.dia|date:"d/m/Y"  }}
+                        </a>
+
+                        {% endif %}
+                        </td>
+                    <td>{{ dia.dia|date:"l"  }}</td>
+                    <td>{{ dia.quant }}</td>
+                    <td>{{ dia.quantm }}</td>
+                    <td>{{ dia.dispm }}</td>
+                    <td>{{ dia.quantv }}</td>
+                    <td>{{ dia.dispv }}</td>
+
+                </tr>
+            {% endfor %}
+    </tbody>
+    </table>
+
+{% endblock %}

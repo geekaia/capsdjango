@@ -1,0 +1,11 @@
+{% extends "base2.html" %}
+
+{% load material_form %}
+
+{% block conteudo %}
+    <h3>Cadastro</h3>
+    <form method="POST">
+        {% form form=form %}{% endform %}
+    <input type="submit" class="btn" value="Salvar" />
+    </form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base2.html" %}
+
+
+{% block conteudo %}
+    <br/>
+    <br/>
+    <br/>
+    <div style="width: 500px;">
+    <form method="POST" action="">
+        <h4>Entre com suas credenciais</h4>
+        {% csrf_token %}
+        {{ form }}
+        <div style="color: #c74439;" >
+            {{ erro }}
+        </div>
+        <input type="submit" class="btn" value="Entrar" />
+    </form>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $("#id_usuario").focus();
+        });
+    </script>
+{% endblock %}

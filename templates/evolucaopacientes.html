@@ -1,0 +1,80 @@
+{% extends "base2.html" %}
+
+{% block conteudo %}
+    <table border="0" style="padding: 3px 3px;">
+
+            <thead>
+          <tr>
+              <th data-field="Nome">Nome</th>
+              <th data-field="anotacaoconsulta">Consulta</th>
+              <th data-field="ultimaatualizacao">Última atualização</th>
+              <th data-field="Ações">Ações</th>
+          </tr>
+        </thead>
+<tbody>
+{% for pc in evolucaoanot %}
+    <tr>
+        <td>{{ pc.paciente.nome }}</td>
+        <td> {{ pc.anotacaoconsulta.data }} -- {{ pc.anotacaoconsulta.hora }}</td>
+        <td> {{ pc.ultimaatualizacao }}</td>
+
+{#            <button></button>#}
+{#            <button data-target="evolucao{{ p.cs.id }}"></button>#}
+        <td>
+            <button data-target="evolucao{{ pc.id }}" class="btn waves-effect waves-light modal-trigger"><i class="material-icons">mode_edit</i></button>
+
+
+            <div id="evolucao{{ pc.id }}" class="modal" style="padding: 10px;">
+              <form method="POST">
+                  {% csrf_token %}
+                <b>Evolução:</b> {{ pc.paciente.nome }}
+
+                  <input type="hidden" name="id"  id="id" value="{{ pc.id }}" />
+                  <input type="hidden" name="paciente"  id="paciente" value="{{ pc.paciente.id }}" />
+                  <input type="hidden" name="anotacaoconsulta" id="anotacaoconsulta" value="{{ pc.anotacaoconsulta.id }}"  /> <!-- Qual consulta? -->
+
+                  <textarea id="evolucaoedit" name="anotacoes"  style="min-height: 300px;">{{ pc.anotacoes }}</textarea>
+                  <br /><b>Última atualização: </b>{{ pc.ultimaatualizacao }} <br />
+
+                  <input type="submit" class="btn btn-primary" value="Salvar" />
+              </form>
+                </div>
+            </td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+    {% ifequal profid 0  %}
+  <ul class="pagination">
+
+      {% if atual > 1 %}
+          <li><a href="/pacientelist?page={{ atual|add:"-1" }}"><i class="material-icons">chevron_left</i></a></li>
+      {% else %}
+          <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+      {% endif %}
+
+      {% for pgn in numpages %}
+          {% ifequal pgn atual  %}
+              <li class="active"><a href="/pacientelist?page={{ pgn }}">{{ pgn }}</a></li>
+          {% else %}
+            <li class="waves-effect"><a href="/pacientelist?page={{ pgn }}">{{ pgn }}</a></li>
+          {% endifequal %}
+      {% endfor %}
+
+      {% if atual < fim %}
+        <li class="waves-effect"><a href="/pacientelist?page={{ atual|add:"1" }}"><i class="material-icons">chevron_right</i></a></li>
+      {% else %}
+        <li class="disabled"><a href="#"><i class="material-icons">chevron_right</i></a></li>
+      {% endif %}
+  </ul>
+
+    {% endifequal %}
+    <script>
+        $(document).ready(function(){
+            $('.modal').modal();
+                     $('ul.tabs').tabs({ 'swipeable': true, responsiveThreshold: false });
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base2.html" %}
+
+{% block conteudo %}
+
+    <table border="0">
+        <tr>
+            <form method="POST" ACTION="">
+                {% csrf_token %}
+                <td><input type="text" name="pesquisa" id="pesquisar" placeholder="Pesquisar um nome" /></td>
+                <td><input type="submit" class="btn" value="Pesquisar" /></td>
+             </form>
+        </tr>
+    </table>
+
+    <table border="0" style="padding: 3px 3px;">
+
+            <thead>
+          <tr>
+              <th data-field="Nome">Nome</th>
+              <th data-field="Número SUS">Número SUS</th>
+              <th data-field="Ações">Ações</th>
+          </tr>
+        </thead>
+<tbody>
+{% for pc in pacientes %}
+    <tr>
+        <td>{{ pc.nome }}</td>
+        <td>{{ pc.numsus }}</td>
+        <td>
+          {% if user.is_staff %}
+            {% ifequal profid 0  %}
+                <a href="/pacienteman?pacienteid={{ pc.id }}"><i class="material-icons">mode_edit</i></a>
+    {#            <a href="/pacienterem?idr={{ pc.id }}">Remover</a>#}
+                &nbsp;
+                <a target="_blank" href="/gerarFicha/{{ pc.id }}/">Ficha</a>
+
+                &nbsp;
+                <a target="_blank" href="/relatorio?pcr={{ pc.id }}">Consultas</a>
+            {% else %}
+
+                {% ifequal periodo "ves" %}
+                    <a href="/consultas?pacienteid={{ pc.id }}&periodo={{ periodo }}&data={{ data }}&profid={{ profid }}" class="btn waves-effect waves-light blue ">Selecionar </a>
+                {% else %}
+                    <a href="/consultas?pacienteid={{ pc.id }}&periodo={{ periodo }}&data={{ data }}&profid={{ profid }}" class="btn waves-effect waves-light yellow">Selecionar </a>
+                {% endifequal %}
+            {% endifequal %}
+        {% else %}
+             <a href="/evolucaopacientes?pacienteid={{ pc.id }}" class="btn waves-effect waves-light blue ">Evolução</a>
+             <a href="/relatorio?pcr={{ pc.id }}" target="_blank" class="btn waves-effect waves-light red ">Relatório</a>
+
+        {% endif %}
+        </td>
+
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+    {% ifequal profid 0  %}
+  <ul class="pagination">
+
+  {% if atual > 1 %}
+      <li><a href="/pacientelist?page={{ atual|add:"-1" }}"><i class="material-icons">chevron_left</i></a></li>
+  {% else %}
+      <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+  {% endif %}
+
+  {% for pgn in numpages %}
+      {% ifequal pgn atual  %}
+          <li class="active"><a href="/pacientelist?page={{ pgn }}">{{ pgn }}</a></li>
+      {% else %}
+        <li class="waves-effect"><a href="/pacientelist?page={{ pgn }}">{{ pgn }}</a></li>
+      {% endifequal %}
+  {% endfor %}
+
+  {% if atual < fim %}
+    <li class="waves-effect"><a href="/pacientelist?page={{ atual|add:"1" }}"><i class="material-icons">chevron_right</i></a></li>
+  {% else %}
+    <li class="disabled"><a href="#"><i class="material-icons">chevron_right</i></a></li>
+  {% endif %}
+
+  </ul>
+
+    {% endifequal %}
+    {% ifequal profid 0 %}
+        {% if user.is_staff %}
+        <a href="/pacienteman?pacienteid=0" class="btn-floating btn-large waves-effect waves-light red">
+            <i class="material-icons">add</i>
+        </a>
+        {% endif %}
+
+    {% endifequal %}
+    <script>
+        $(document).ready(function(){
+            $("#pesquisar").focus();
+        });
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,221 @@
+{% extends "base2.html" %}
+
+{% block conteudo %}
+    <h5>{{ prof }} </h5>
+    <ol>
+    {% for err in form.errors %}
+        <li>{{ err }}</li>
+    {% endfor %}
+    {% ifnotequal erro "" %}
+        <li>{{ erro }}</li>
+    {% endifnotequal %}
+    </ol>
+    <div>
+    {% load material_form %}
+
+<form method="POST" action="">
+    {% csrf_token %}
+
+
+    <input type="hidden" name="profissional" value="{{ hora.profissional_id }}" />
+    <input type="hidden" name="id" value="{{ hora.id }}" />
+
+    <h6>Validade</h6>
+    <div class="row">
+      <div class="col s4">
+          <label for="id_validadeinicio">Início</label>
+          <input type="date" class="datepicker" id="id_validadeinicio" name="validadeinicio"  />
+      </div>
+      <div class="col s4">
+          <label for="id_validadefim">Fim</label>
+          <input type="date" class="datepicker"  id="id_validadefim" name="validadefim" />
+      </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function(){
+
+            $('.datepicker').pickadate({
+             format: 'dd/mm/yyyy',
+             formatSubmit: 'dd/mm/yyyy',
+              // Título dos botões de navegação
+              labelMonthNext: 'Próximo Mês',
+              labelMonthPrev: 'Mês Anterior',
+              // Título dos seletores de mês e ano
+              labelMonthSelect: 'Selecione o Mês',
+              labelYearSelect: 'Selecione o Ano',
+              // Meses e dias da semana
+              monthsFull: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+              monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+              weekdaysFull: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+              weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+              // Letras da semana
+              weekdaysLetter: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+              //Botões
+              today: 'Hoje',
+              clear: 'Limpar',
+              close: 'Fechar',
+
+            });
+
+            var pickerValidadeInicio =  $('#id_validadeinicio').pickadate('picker');
+            var pickerValidadeFim =$('#id_validadefim').pickadate('picker');
+{##}
+            pickerValidadeInicio.set('select', '{{ hora.validadeinicio|date:"d/m/Y" }}', { format: 'dd/mm/yyyy' });
+            pickerValidadeFim.set('select', '{{ hora.validadefim|date:"d/m/Y" }}', { format: 'dd/mm/yyyy' });
+
+            $('#id_horainicioM').pickatime({
+                format: 'HH:i',
+                formatSubmit: 'HH:i',
+                min: [6,30],
+                max: [13,0]
+            });
+            $('#id_horafimM').pickatime({ formatSubmit: 'HH:i' ,
+                format: 'HH:i',
+                min: [6,30],
+                max: [12,0] });
+            $('#id_horainicio').pickatime({ formatSubmit: 'HH:i' ,
+                format: 'HH:i',
+                min: [12,0],
+                max: [18,0] });
+
+
+            $('#id_horafimT').pickatime({ formatSubmit: 'HH:i' ,
+                format: 'HH:i',
+                min: [12,0],
+                max: [18,0] });
+
+
+
+
+            $('.datepicker').on('open', function() {
+                $('.datepicker').appendTo('body');
+            });
+
+
+        });
+    </script>
+
+<table border="1" class="bordered">
+    <thead>
+      <tr>
+          <th width="230px;">Período</th>
+          <th>Segunda</th>
+          <th>Terça</th>
+          <th>Quarta</th>
+          <th>Quinta</th>
+          <th>Sexta</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td align="center">
+            Matutino
+
+            <div class="row">
+              <div class="col s6">
+                  <label for="id_horainicio">Entrada</label>
+                   <input type="timepicker"  id="id_horainicioM" style="max-width: 80px;" value="{{ hora.horainicioM|date:"g:i"  }}"  name="horainicioM" />
+              </div>
+              <div class="col s6">
+                  <label for="id_horafim">Saída</label>
+                   <input type="timepicker"  id="id_horafimM" style="max-width: 80px;"  value="{{ hora.horafimM|date:"g:i" }}"  name="horafimM" />
+
+              </div>
+            </div>
+        </td>
+        <td  align="center">
+            <p>
+                {{ form.segundaM }}
+              <label for="id_segundaM" style="width: 0px;"></label>
+            </p>
+            </td>
+        <td  align="center">
+            <p>
+
+                {{ form.tercaM }}
+            <label for="id_tercaM"></label>
+            </p>
+            </td>
+        <td  align="center">
+            <p>
+                {{ form.quartaM }}
+
+              <label for="id_quartaM"></label>
+            </p>
+            </td>
+        <td  align="center">
+            <p>
+                {{ form.quintaM }}
+              <label for="id_quintaM"></label>
+            </p>
+            </td>
+        <td  align="center">
+            <p>
+                {{ form.sextaM }}
+              <label for="id_sextaM"></label>
+            </p>
+            </td>
+      </tr>
+      <tr>
+        <td  align="center">
+            Vespertino
+            <div class="row">
+              <div class="col s6">
+                <label for="id_horainicio">Inicio</label>
+                <input type="timepicker" id="id_horainicio"  value="{{ hora.horainicioT|date:"G:i" }}" style="max-width: 80px;"  name="horainicioT" />
+              </div>
+              <div class="col s6">
+                <label for="id_horafimT">Fim</label>
+                <input type="timepicker" id="id_horafimT" value="{{ hora.horafimT|date:"G:i" }}" style="max-width: 80px;"  name="horafimT" />
+              </div>
+            </div>
+
+        </td>
+        <td  align="center">
+            <p>
+                {{ form.segundaT }}
+              <label for="id_segundaT"></label>
+            </p>
+            </td>
+        <td  align="center">
+            <p>
+               {{ form.tercaT }}
+              <label for="id_tercaT"></label>
+            </p>
+
+        </td>
+        <td  align="center">
+            <p>
+                {{ form.quartaT }}
+              <label for="id_quartaT"></label>
+            </p>
+
+
+        </td>
+        <td  align="center">
+            <p>
+              {{ form.quintaT }}
+              <label for="id_quintaT"></label>
+            </p>
+
+        <td  align="center">
+            <p>
+              {{ form.sextaT }}
+              <label for="id_sextaT"></label>
+            </p>
+        </td>
+      </tr>
+    </tbody>
+</table>
+
+ <br />
+ <input type="submit" class="btn" value="SALVAR" />
+
+</form>
+
+    </div>
+
+{% endblock %}

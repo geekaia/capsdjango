@@ -1,0 +1,85 @@
+{% extends "base2.html" %}
+
+{% block conteudo %}
+
+{% load material_form %}
+<form method="POST" enctype="multipart/form-data" class="viewform" action="/pacienteman">
+
+
+<script>
+    function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+
+    // Loop through the FileList and render image files as thumbnails.
+    for (var i = 0, f; f = files[i]; i++) {
+
+      // Only process image files.
+      if (!f.type.match('image.*')) {
+        continue;
+      }
+
+      var reader = new FileReader();
+
+      // Closure to capture the file information.
+      reader.onload = (function(theFile) {
+        return function(e) {
+          // Render thumbnail.
+          var span = document.getElementById('fotoimg');
+          span.innerHTML = ['<img width="185px" height="200px"  src="', e.target.result,
+                            '" title="', escape(theFile.name), '"/>'].join('');
+
+        };
+      })(f);
+
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(f);
+    }
+  }
+    $(function(){
+        document.getElementsByName("foto")[0].addEventListener('change', handleFileSelect, false);
+    });
+
+
+</script>
+
+    {% csrf_token %}
+
+    {% ifequal id "" %}
+        <h4>Novo paciente</h4>
+    {% else %}
+        <h4>Editar {{ formulario.nome.value }}</h4>
+    {% endifequal %}
+
+    {% if er %}
+    Os campos abaixo são requeridos:
+        <ol style="color: brown;">
+        {% for err in formulario.errors %}
+            {{ err }} <br />
+    {% endfor %}
+        </ol>
+    {% endif %}
+    <div id="fotoimg">
+        {% if foto %}
+            <img src="{{ foto.url }}" width="185px" height="200px" />
+        {% endif %}
+    </div>
+    <input type="hidden" value="{{ id }}" name="id" />
+    {% form form=formulario %}{% endform %}
+
+    <button type="submit" name="_submit" class="btn">Salvar</button>
+
+</form>'
+
+    <script language="javascript">
+    $(document).ready(function(){
+          $("#id_fone").mask("(99) 99999-9999");
+          $("#id_fonefixo").mask("(99) 9999-9999");
+          $("#id_cpf").mask("999.999.999-99");
+
+    });
+
+</script>
+
+
+
+{% endblock %}

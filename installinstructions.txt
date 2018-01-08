@@ -1,0 +1,35 @@
+
+ATUALIZAR TUDO PARA A VERSÃO DO DJANGO 2.0
+
+Para rodar no Windows 
+
+Visual C++ Redistributable for Visual Studio 2015 32 bits
+
+
+Pip para windows 
+https://pip.pypa.io/en/stable/installing/
+
+MS DISTRIBUTED 
+
+"C:\Users\CAPS II\AppData\Local\Programs\Python\Python36-32\python.exe" -m pip install   Django==2.0
+
+
+"C:\Users\CAPS II\AppData\Local\Programs\Python\Python36-32\python.exe" -m pip install  django-material==0.13.1
+
+"C:\Users\CAPS II\AppData\Local\Programs\Python\Python36-32\python.exe" -m pip install  django-input-mask==2.0.2
+
+"C:\Users\CAPS II\AppData\Local\Programs\Python\Python36-32\python.exe" -m pip install  reportlab==3.4.0
+
+"C:\Users\CAPS II\AppData\Local\Programs\Python\Python36-32\python.exe" -m pip install   django-localflavor==1.4.1
+
+
+
+"C:\Users\CAPS II\AppData\Local\Programs\Python\Python36-32\python.exe" -m pip install   django-localflavor-br==1.0
+
+
+
+
+
+
+
+

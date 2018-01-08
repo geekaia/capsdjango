@@ -1,0 +1,35 @@
+{% extends "base2.html" %}
+
+{% block conteudo %}
+    <h5>Horários de {{ prof.user.get_full_name }}</h5>
+  <form method="POST" action="">
+
+  </form>
+  <table>
+    <thead>
+      <tr>
+          <th>Nome</th>
+          <th>Início</th>
+          <th>Final</th>
+          <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for hora in horarios %}
+      <tr>
+        <td>{{ hora.profissional.user.get_full_name }}</td>
+        <td>{{ hora.validadeinicio|date:"d/m/Y" }}</td>
+        <td>{{ hora.validadefim|date:"d/m/Y" }}</td>
+        <td><a href="/newhorario?idhorario={{ hora.id }}&idprof={{ hora.profissional.id }}"><i class="material-icons">mode_edit</i></a></td>
+      </tr>
+   {% endfor %}
+
+    </tbody>
+  </table>
+    {% ifnotequal idprof None %}
+        <a href="/newhorario?idprof={{ idprof }}" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+    {% endifnotequal %}
+
+
+{% endblock %}

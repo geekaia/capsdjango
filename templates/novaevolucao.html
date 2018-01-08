@@ -1,0 +1,29 @@
+{% extends "base2.html" %}
+
+
+{% block conteudo %}
+
+       {% load static %}
+      <script src="{% static 'textbox/textboxio-client/textboxio/textboxio.js' %}"></script>
+
+
+
+    <form method="POST">
+          {% csrf_token %}
+        <b>Evolução:</b> {{ pc.paciente.nome }}
+
+          <input type="hidden" name="id"  id="id" value="{{ pc.id }}" />
+          <input type="hidden" name="paciente"  id="paciente" value="{{ pc.paciente.id }}" />
+          <input type="hidden" name="anotacaoconsulta" id="anotacaoconsulta" value="{{ pc.anotacaoconsulta.id }}"  /> <!-- Qual consulta? -->
+
+          <textarea id="evolucaoedit" name="anotacoes"  style="min-height: 300px;">{{ pc.anotacoes }}</textarea>
+          <br /><b>Última atualização: </b>{{ pc.ultimaatualizacao }} <br />
+
+          <input type="submit" class="btn btn-primary" value="Salvar" />
+    </form>
+    <script>
+        $(document).ready(function(){
+            textboxio.replace('textarea');
+        });
+    </script>
+{% endblock %}

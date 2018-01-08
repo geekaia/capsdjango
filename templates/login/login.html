@@ -1,0 +1,28 @@
+
+<br />
+<br />
+ <form name="loginf" ng-controller="login">
+     {% csrf_token %}
+      <md-card md-theme-watch style="max-width: 500px;">
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Entrar no sistema</span>
+          </md-card-title-text>
+        </md-card-title>
+      <md-card-content>
+            <md-input-container  class="md-block">
+                <label>Usuário</label>
+                <input ng-model="usuario">
+              </md-input-container>
+          <md-input-container  class="md-block">
+            <label>Senha</label>
+            <input ng-model="senha" type="password">
+          </md-input-container>
+
+      </md-card-content>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button class="md-raised md-primary" ng-click="logar();">Login</md-button>
+        </md-card-actions>
+      </md-card>
+
+    </form>
