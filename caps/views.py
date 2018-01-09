@@ -40,7 +40,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
 from django.contrib.admin.views.decorators import staff_member_required
-
+from django.contrib.auth.models import User
 
 
 @login_required
@@ -836,9 +836,14 @@ def getAnotacao(consulta):
 def minhasconsultas(request):
     # configuração e instalação de computadores
 
+    prof = None
 
+    # print("Usuário: ", request.user)
 
-    prof = Profissional.objects.get(user=request.user)
+    user = User.objects.get(username=str(request.user))
+
+    if not user.is_staff:
+        prof = Profissional.objects.get(user=request.user)
 
     if request.POST:
         id = request.POST['id']
@@ -879,20 +884,6 @@ def minhasconsultas(request):
 
     trab = []
 
-    # Tenta pegar os argumentos acima
-    try:
-        idpaciente = request.GET['pacienteid']
-        pacientenome = paciente.objects.get(pk=idpaciente)
-
-        periodo = request.GET['periodo']
-        datacad = request.GET['data']
-
-        profid = request.GET['profid']
-        profissional = Profissional.objects.get(pk=profid)
-        cad = '1'
-    except:
-        print("Ocorreu um erro!!!")
-        cad = '0'
 
     # Tenta pegar de uma só data
     try:
@@ -916,6 +907,8 @@ def minhasconsultas(request):
     except Exception as e:
         print("Erro: ", e)
         consultasList = Consulta.objects.filter(data=data, profissional=prof)
+
+        print("Quantidade: ", len(consultasList))
 
     p = []
 
@@ -964,7 +957,7 @@ def minhasconsultas(request):
             [prof.id, manha, tarde])  # zero não tem espediente e 1 tem  -- primeiro é cedo e o outro é de tarde
 
         p.append(prof)
-        print("prof nome: ", prof.nome)
+        print("prof nome: ", prof.user.get_full_name())
 
     # Fica so quem tem horario
     profs = p
@@ -974,8 +967,12 @@ def minhasconsultas(request):
     for c in consultasList:
         dc = {}
         dc['cs'] = c
+        # print("Nome: ", c.paciente.nome )
         dc['anot'] = getAnotacao(c)
         dictConsultas.append(dc)
+
+
+    print("Tam: ", len(dictConsultas))
 
 
     return render(request, "minhasconsultas.html", {'profs': profs,
@@ -986,7 +983,7 @@ def minhasconsultas(request):
                                                  'pacientenome': pacientenome,
                                                  'profissional': profissional,
                                                  'datacad': datacad,
-                                                 'cad': cad,
+                                                 # 'cad': cad,
                                                  'consultasList': dictConsultas,
                                                  'lastid': lastid,
                                                  'periodo': periodo})

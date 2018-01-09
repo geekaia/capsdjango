@@ -96,8 +96,8 @@
                                     <td>Ações</td>
                                 </tr>
                                 {% for p in consultasList %}
+
                                     {% ifequal p.cs.periodo "mat" %}
-                                        {% ifequal prof.id p.cs.profissional.id %}
                                             <tr>
                                                 <td>{{ p.cs.paciente.nome }}
 {#                                                    <a target="_blank" href="/pacienteman?pacienteid={{ p.cs.paciente.id }}">{{ p.cs.paciente.nome }}</a>#}
@@ -134,7 +134,6 @@
 
                                                 </td>
                                             </tr>
-                                            {% endifequal %}
                                     {% endifequal %}
                                  {% endfor %}
                         </table>
@@ -154,29 +153,46 @@
                                 <td>Ações</td>
                             </tr>
                            {% for p in consultasList %}
-                                    {% ifequal p.periodo "ves" %}
-                                        {% ifequal prof.id p.profissional.id %}
-                                            <tr>
-                                                <td>
-                                                    <a target="_blank" href="/pacienteman?pacienteid={{ p.paciente.id }}">{{ p.paciente.nome }}</a>
-                                                        </td>
-                                                <td>{{ p.hora }}</td>
-                                                <td>
-                                                        {{ p.get_status_display }}
-                                                        <a href="#" onclick="cgStatus({{ p.id }});">
-                                                            Alterar
-                                                        </a>
 
-                                                        <a href="#" onclick="remover({{ p.id }},'{{ p.paciente.nome }}');">
-                                                            Remover
-                                                        </a>
-                                                         <input type="hidden" id="nome{{ p.id }}" value="{{ p.paciente.nome }}"/>
-                                                        <input type="hidden" id="hora{{ p.id }}" value="{{ p.hora }}"/>
-                                                        <input type="hidden" id="anot{{ p.id }}" value="{{ p.anotacoes }}"/>
-                                                        <input type="hidden" id="st{{ p.id }}" value="{{ p.status }}"/>
+                                    {% ifequal p.cs.periodo "ves" %}
+
+                                            <tr>
+                                                <td>{{ p.cs.paciente.nome }}
+{#                                                    <a target="_blank" href="/pacienteman?pacienteid={{ p.cs.paciente.id }}">{{ p.cs.paciente.nome }}</a>#}
                                                     </td>
+                                                <td>{{ p.cs.hora }}</td>
+                                                <td>
+                                                    {{ p.cs.get_status_display }}
+                                                    <button data-target="evolucao{{ p.cs.id }}" class="btn waves-effect waves-light modal-trigger">Evolução</button>
+                                                    <div id="evolucao{{ p.cs.id }}" class="modal" style="padding: 10px; min-width: 50%; min-height: 70%;">
+                                                          <form method="POST">
+                                                              {% csrf_token %}
+                                                            <b>Evolução:</b> {{ p.anot.paciente }}
+                                                              {% ifequal p.anot.id -1 %}
+                                                              <input type="hidden" name="id"  id="id" value="-1" />
+                                                              <input type="hidden" name="paciente"  id="paciente" value="{{ p.anot.paciente }}" />
+                                                              <input type="hidden" name="anotacaoconsulta" id="anotacaoconsulta" value="{{ p.anot.anotacaoconsulta }}"  /> <!-- Qual consulta? -->
+                                                            {% else %}
+                                                              <input type="hidden" name="id"  id="id" value="{{ p.anot.id }}" />
+                                                              <input type="hidden" name="paciente"  id="paciente" value="{{ p.anot.paciente.id }}" />
+                                                              <input type="hidden" name="anotacaoconsulta" id="anotacaoconsulta" value="{{ p.anot.anotacaoconsulta.id }}"  /> <!-- Qual consulta? -->
+
+
+                                                              {% endifequal %}
+                                                              <textarea id="evolucaoedit" name="anotacoes"  style="min-height: 300px;">{{ p.anot.anotacoes }}</textarea>
+                                                              <br /><b>Última atualização: </b>{{ p.anot.ultimaatualizacao }} <br />
+                                                              <input type="submit" class="btn btn-primary" value="Salvar" />
+                                                          </form>
+                                                          <script>
+{#                                                              $(document).ready(function(){#}
+{#                                                                  textboxio.replace('textarea');#}
+{#                                                              });#}
+                                                            </script>
+                                                    </div>
+
+                                                </td>
                                             </tr>
-                                        {% endifequal %}
+
                                     {% endifequal %}
                            {% endfor %}
                         </table>
